@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아기 열 체크 가이드</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EE;
+    --warm-white: #FFF9F4;
+    --coral: #E8735A;
+    --coral-light: #F4A08A;
+    --coral-pale: #FDEAE4;
+    --amber: #D4873C;
+    --amber-light: #F0B96A;
+    --sage: #7A9E8E;
+    --sage-light: #B8D4CA;
+    --sage-pale: #E8F4F0;
+    --charcoal: #2C2C2C;
+    --warm-gray: #6B6560;
+    --border: #E8DDD4;
+    --danger: #C94040;
+    --danger-pale: #FDEAEA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Pretendard', sans-serif;
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--charcoal);
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: var(--coral);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 140px; height: 140px;
+    background: var(--amber-light);
+    border-radius: 50%;
+    opacity: 0.12;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--coral);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--coral-light); }
+  .hero p {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .tab {
+    flex: 1;
+    padding: 16px 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--warm-gray);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    color: var(--coral);
+    border-bottom-color: var(--coral);
+  }
+  .tab-emoji { display: block; font-size: 18px; margin-bottom: 3px; }
+
+  /* PANELS */
+  .panel { display: none; padding: 24px 20px 60px; }
+  .panel.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--warm-gray);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  /* CHECKLIST */
+  .check-group { margin-bottom: 28px; }
+  .check-group-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .check-item:active { transform: scale(0.98); }
+  .check-item.checked {
+    background: var(--sage-pale);
+    border-color: var(--sage);
+  }
+  .check-item.checked .check-box {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  .check-item.checked .check-box::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .check-box {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: white;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+  .check-text { flex: 1; }
+  .check-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+  }
+  .check-text span {
+    font-size: 12px;
+    color: var(--warm-gray);
+    line-height: 1.5;
+  }
+
+  /* DANGER CARD */
+  .danger-card {
+    background: var(--danger-pale);
+    border: 2px solid #EFAAAA;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+  .danger-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--danger);
+    margin-bottom: 10px;
+  }
+  .danger-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .danger-list li {
+    font-size: 13px;
+    color: #8B2020;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .danger-list li::before {
+    content: '!';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--danger);
+  }
+
+  /* TEMP GUIDE */
+  .temp-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .temp-row {
+    display: flex;
+    align-items: stretch;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+  }
+  .temp-badge {
+    width: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    flex-shrink: 0;
+    padding: 16px 0;
+  }
+  .temp-badge.normal { background: #E8F5E9; color: #2E7D32; }
+  .temp-badge.mild { background: #FFF8E1; color: #F57F17; }
+  .temp-badge.high { background: #FFF3E0; color: #E65100; }
+  .temp-badge.danger { background: #FFEBEE; color: var(--danger); }
+  .temp-content {
+    padding: 14px 16px;
+    background: white;
+    flex: 1;
+  }
+  .temp-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 3px;
+  }
+  .temp-desc {
+    font-size: 12px;
+    color: var(--warm-gray);
+    line-height: 1.5;
+  }
+
+  /* AGE CARDS */
+  .age-card {
+    background: white;
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .age-header {
+    padding: 16px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .age-header-left { display: flex; align-items: center; gap: 12px; }
+  .age-emoji {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .age-title { font-size: 15px; font-weight: 700; color: var(--charcoal); margin-bottom: 2px; }
+  .age-sub { font-size: 12px; color: var(--warm-gray); }
+  .age-arrow {
+    font-size: 18px;
+    color: var(--warm-gray);
+    transition: transform 0.3s;
+  }
+  .age-card.open .age-arrow { transform: rotate(90deg); }
+  .age-body {
+    display: none;
+    padding: 0 18px 18px;
+    border-top: 1.5px solid var(--border);
+  }
+  .age-card.open .age-body { display: block; }
+  .age-body-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    margin: 14px 0 8px;
+  }
+  .age-tip {
+    background: var(--warm-white);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--charcoal);
+    line-height: 1.6;
+    border-left: 3px solid var(--coral-light);
+  }
+  .age-warn {
+    background: var(--danger-pale);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #7A2020;
+    line-height: 1.6;
+    border-left: 3px solid var(--danger);
+  }
+  .age-ok {
+    background: var(--sage-pale);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #2A5C4E;
+    line-height: 1.6;
+    border-left: 3px solid var(--sage);
+  }
+
+  /* MED GUIDE */
+  .med-card {
+    background: white;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .med-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .med-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .med-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .med-key { color: var(--warm-gray); }
+  .med-val { font-weight: 600; color: var(--charcoal); text-align: right; max-width: 60%; }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 6px 0 14px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--coral), var(--amber-light));
+    border-radius: 2px;
+    transition: width 0.4s;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--warm-gray);
+    margin-bottom: 2px;
+  }
+
+  /* FLOATING RESET */
+  .reset-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    background: var(--charcoal);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    display: none;
+    font-family: 'Pretendard', sans-serif;
+    z-index: 200;
+  }
+  .reset-btn.visible { display: block; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  .info-pill {
+    display: inline-block;
+    background: var(--amber-light);
+    color: var(--charcoal);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">육아 건강 가이드</div>
+  <h1>아기 <span>열날 때</span><br>체크리스트 & 대처법</h1>
+  <p>월령별 기준과 체크 항목을 한 눈에 확인하세요</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('check')">
+    <span class="tab-emoji">✅</span>체크리스트
+  </div>
+  <div class="tab" onclick="switchTab('temp')">
+    <span class="tab-emoji">🌡️</span>체온 기준
+  </div>
+  <div class="tab" onclick="switchTab('age')">
+    <span class="tab-emoji">👶</span>월령별 대처
+  </div>
+  <div class="tab" onclick="switchTab('med')">
+    <span class="tab-emoji">💊</span>해열제
+  </div>
+</div>
+
+<!-- 체크리스트 탭 -->
+<div class="panel active" id="panel-check">
+  <div class="section-title">열 발생 시 체크 항목</div>
+  <p class="section-sub">항목을 탭해서 확인하세요. 의사에게 전달할 때 활용하세요.</p>
+
+  <div class="progress-label">
+    <span>체크 완료</span>
+    <span id="progress-text">0 / 18</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+  <div class="check-group">
+    <div class="check-group-label">🌡️ 기본 체온 측정</div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>체온 측정 완료</strong><span>직장(항문) 측정이 가장 정확. 기록: ___°C</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>언제부터 열이 났나?</strong><span>발열 시작 시간 기록 (예: 오후 2시부터)</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>체온 변화 추이</strong><span>30분~1시간 간격으로 재측정 및 기록</span></div>
+    </div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-label">👀 전신 상태 확인</div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>수유·수분 섭취 상태</strong><span>평소보다 적게 먹는지, 거부하는지 확인</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>소변 횟수 & 색깔</strong><span>하루 6회 미만이면 탈수 의심. 진한 노란색 주의</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>피부 색깔 & 발진</strong><span>창백함, 푸른빛, 붉은 발진 여부 확인</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>눈 상태</strong><span>충혈, 눈꼽, 눈물 과다 여부</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>호흡 상태</strong><span>평소보다 빠른지, 코를 벌름거리는지 확인</span></div>
+    </div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-label">😢 동반 증상 체크</div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>콧물 / 코막힘</strong><span>색깔 확인 (맑음 → 노란색 변화 주목)</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>기침 여부 & 정도</strong><span>마른기침 vs 가래 기침, 밤에 심해지는지</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>구토 / 설사</strong><span>횟수, 색깔, 양 기록</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>귀 잡아당기기 / 이통</strong><span>중이염 가능성 확인</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>보채는 정도</strong><span>달래지는지, 달래도 계속 우는지 확인</span></div>
+    </div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-label">📋 최근 이력 확인</div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>최근 예방접종 여부</strong><span>접종 후 48~72시간 이내 열은 정상 반응 가능</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>주변 감염자 접촉 여부</strong><span>어린이집, 가족 중 아픈 사람 있었는지</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>해열제 투여 기록</strong><span>이름, 용량, 투여 시간 기록</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>열이 며칠째인지</strong><span>3일 이상 지속 시 반드시 진료</span></div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>해열 후 열 다시 오름?</strong><span>한 번 떨어졌다 재상승 시 진료 필요</span></div>
+    </div>
+  </div>
+
+  <div class="danger-card">
+    <div class="danger-card-title">🚨 즉시 응급실 가야 할 신호</div>
+    <ul class="danger-list">
+      <li>경기(경련) 발생 / 의식이 없음</li>
+      <li>숨 쉬기 힘들어함, 입술이 파래짐</li>
+      <li>피부에 붉은 점상 출혈 (사라지지 않는 발진)</li>
+      <li>심하게 처져서 깨우기 힘든 상태</li>
+      <li>신생아(생후 3개월 미만) 38°C 이상</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 체온 기준 탭 -->
+<div class="panel" id="panel-temp">
+  <div class="section-title">체온 측정 & 기준표</div>
+  <p class="section-sub">부위별로 정상 체온 범위가 달라요. 직장(항문) 측정이 가장 정확합니다.</p>
+
+  <div class="check-group">
+    <div class="check-group-label">📍 측정 부위별 발열 기준</div>
+  </div>
+
+  <div class="temp-guide">
+    <div class="temp-row">
+      <div class="temp-badge normal">직장</div>
+      <div class="temp-content">
+        <div class="temp-label">항문 (직장) 측정 — 가장 정확</div>
+        <div class="temp-desc">정상: 36.6~38.0°C / <strong>38.0°C 이상 = 발열</strong></div>
+      </div>
+    </div>
+    <div class="temp-row">
+      <div class="temp-badge mild">귀</div>
+      <div class="temp-content">
+        <div class="temp-label">귀 (고막) 측정</div>
+        <div class="temp-desc">정상: 35.8~37.5°C / <strong>38.0°C 이상 = 발열</strong><br>6개월 미만은 부정확할 수 있음</div>
+      </div>
+    </div>
+    <div class="temp-row">
+      <div class="temp-badge mild">겨드랑이</div>
+      <div class="temp-content">
+        <div class="temp-label">겨드랑이 측정</div>
+        <div class="temp-desc">정상: 34.7~37.3°C / <strong>37.4°C 이상 = 발열</strong><br>실제보다 0.5~1°C 낮게 나옴</div>
+      </div>
+    </div>
+    <div class="temp-row">
+      <div class="temp-badge high">이마</div>
+      <div class="temp-content">
+        <div class="temp-label">이마 (비접촉) 측정</div>
+        <div class="temp-desc">편리하지만 환경 영향 많이 받음<br>확인용으로만 사용, 정밀 측정 필요 시 재측정</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="check-group">
+    <div class="check-group-label">🌡️ 체온 단계별 대응</div>
+  </div>
+
+  <div class="temp-guide">
+    <div class="temp-row">
+      <div class="temp-badge normal">정상</div>
+      <div class="temp-content">
+        <div class="temp-label">36.5 ~ 37.5°C</div>
+        <div class="temp-desc">정상 범위. 평소 상태 유지</div>
+      </div>
+    </div>
+    <div class="temp-row">
+      <div class="temp-badge mild">미열</div>
+      <div class="temp-content">
+        <div class="temp-label">37.5 ~ 38.0°C</div>
+        <div class="temp-desc">미열 구간. 수분 충분히 보충, 상태 관찰<br>해열제 투여는 상황 보며 결정</div>
+      </div>
+    </div>
+    <div class="temp-row">
+      <div class="temp-badge high">발열</div>
+      <div class="temp-content">
+        <div class="temp-label">38.0 ~ 38.9°C</div>
+        <div class="temp-desc">발열 구간. 해열제 투여 시작 고려<br>수분 보충, 얇은 옷으로 갈아입히기</div>
+      </div>
+    </div>
+    <div class="temp-row">
+      <div class="temp-badge danger">고열</div>
+      <div class="temp-content">
+        <div class="temp-label">39.0°C 이상</div>
+        <div class="temp-desc"><strong>고열!</strong> 해열제 투여 + 진료 적극 고려<br>39.4°C 이상 또는 3개월 미만 → 즉시 진료</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title" style="font-size:16px">💧 수분 보충 포인트</div>
+  <div style="margin-top:12px">
+    <div class="age-ok">모유/분유 수유 중이라면 평소보다 더 자주 수유하세요. 6개월 이상은 미지근한 물 조금씩 보충 가능합니다.</div>
+    <div class="age-tip">구토·설사 동반 시 전해질 음료(예: 페디아라이트 등) 소량씩 자주 줘요. 한 번에 많이 X → 조금씩 자주!</div>
+    <div class="age-warn">소변을 6시간 이상 보지 않거나, 입술이 말라있고 눈물이 없으면 탈수 위험. 즉시 진료 받으세요.</div>
+  </div>
+</div>
+
+<!-- 월령별 탭 -->
+<div class="panel" id="panel-age">
+  <div class="section-title">월령별 대처법</div>
+  <p class="section-sub">아기 나이에 맞는 대처 기준을 확인하세요. 카드를 탭하면 상세 내용이 열려요.</p>
+
+  <!-- 0-3개월 -->
+  <div class="age-card" id="age0">
+    <div class="age-header" onclick="toggleAge('age0')">
+      <div class="age-header-left">
+        <div class="age-emoji" style="background:#FFEBEE;">🍼</div>
+        <div>
+          <div class="age-title">생후 0~3개월</div>
+          <div class="age-sub">신생아기 — 가장 주의 필요</div>
+        </div>
+      </div>
+      <div class="age-arrow">›</div>
+    </div>
+    <div class="age-body">
+      <div class="age-body-title">🚨 핵심 원칙</div>
+      <div class="age-warn">직장 체온 38°C 이상이면 즉시 응급실! 해열제 먼저 투여 금지. 반드시 진료 먼저!</div>
+      <div class="age-warn">이 시기 열은 세균성 패혈증, 뇌수막염 등 심각한 감염일 수 있어 원인 규명이 먼저입니다.</div>
+      <div class="age-body-title">✅ 진료 전 할 수 있는 것</div>
+      <div class="age-tip">얇은 옷 1겹으로 갈아입히고, 실내 온도 22~24°C 유지하기</div>
+      <div class="age-tip">모유/분유 수유 계속 유지. 평소보다 자주 먹이기</div>
+      <div class="age-ok">체온 측정 후 수치와 측정 시간 기록해 두기 (병원에서 꼭 필요)</div>
+    </div>
+  </div>
+
+  <!-- 3-6개월 -->
+  <div class="age-card" id="age3">
+    <div class="age-header" onclick="toggleAge('age3')">
+      <div class="age-header-left">
+        <div class="age-emoji" style="background:#FFF8E1;">🌱</div>
+        <div>
+          <div class="age-title">생후 3~6개월</div>
+          <div class="age-sub">면역력 최저점 시기</div>
+        </div>
+      </div>
+      <div class="age-arrow">›</div>
+    </div>
+    <div class="age-body">
+      <div class="age-body-title">🌡️ 기준</div>
+      <div class="age-warn">38.5°C 이상 → 당일 소아과 방문 권장. 38°C 이상 열이 24시간 이상 → 진료 필요.</div>
+      <div class="age-body-title">✅ 대처법</div>
+      <div class="age-tip">해열제는 38.5°C 이상, 아기가 많이 불편해 보일 때 투여 고려. 아세트아미노펜(타이레놀 계열) 사용.</div>
+      <div class="age-tip">모유 수유 더 자주 (1~1.5시간 간격으로). 분유 수유라면 조금씩 자주.</div>
+      <div class="age-ok">미지근한 물 적은 양으로 보충 가능 (이유식 시작 전이라면 모유/분유 위주)</div>
+      <div class="age-warn">이 시기 엄마 뱃속에서 받은 면역이 거의 사라집니다. 열이 나는 원인을 꼭 확인하세요.</div>
+    </div>
+  </div>
+
+  <!-- 6-12개월 -->
+  <div class="age-card" id="age6">
+    <div class="age-header" onclick="toggleAge('age6')">
+      <div class="age-header-left">
+        <div class="age-emoji" style="background:#E8F5E9;">🌿</div>
+        <div>
+          <div class="age-title">생후 6~12개월</div>
+          <div class="age-sub">돌발진 등 바이러스 흔한 시기</div>
+        </div>
+      </div>
+      <div class="age-arrow">›</div>
+    </div>
+    <div class="age-body">
+      <div class="age-body-title">🌡️ 기준</div>
+      <div class="age-tip">38.5~39°C 이상 + 불편해 보일 때 해열제 투여. 39°C 이상 지속 시 진료.</div>
+      <div class="age-body-title">✅ 대처법</div>
+      <div class="age-ok">해열 효과가 나타나는 30분~1시간 후 체온 재측정. 1°C 이상 낮아지면 OK.</div>
+      <div class="age-tip">미지근한 물 자주 보충. 이유식은 무리하지 말고 부드러운 것 위주.</div>
+      <div class="age-tip">돌발진(장미진): 3~5일 고열 후 열이 떨어지며 몸통에 발진. 치료 불필요하나 고열 관리 필요.</div>
+      <div class="age-warn">경기(열성경련) 발생 시: 당황하지 말고 안전한 곳에 눕히고, 입에 아무것도 넣지 말 것. 5분 이상 경련 지속 시 119 호출.</div>
+      <div class="age-body-title">💉 예방접종 후 열</div>
+      <div class="age-ok">접종 후 24~48시간 이내 38.5°C 미만 = 정상 반응. 해열제 투여 가능. 48시간 지나도 지속 or 39°C 이상이면 진료.</div>
+    </div>
+  </div>
+
+  <!-- 12-24개월 -->
+  <div class="age-card" id="age12">
+    <div class="age-header" onclick="toggleAge('age12')">
+      <div class="age-header-left">
+        <div class="age-emoji" style="background:#E3F2FD;">🐥</div>
+        <div>
+          <div class="age-title">12~24개월</div>
+          <div class="age-sub">어린이집 첫 시기, 감기 잦아짐</div>
+        </div>
+      </div>
+      <div class="age-arrow">›</div>
+    </div>
+    <div class="age-body">
+      <div class="age-body-title">🌡️ 기준</div>
+      <div class="age-tip">38.5°C 이상 + 힘들어 보이면 해열제. 3일 이상 지속 시 반드시 진료.</div>
+      <div class="age-body-title">✅ 대처법</div>
+      <div class="age-ok">아이가 물을 잘 마신다면 보리차, 희석 이온 음료 가능. 수분 섭취가 가장 중요!</div>
+      <div class="age-tip">아이가 먹고 싶어 하면 주되, 억지로 먹일 필요 없음. 소화 잘 되는 죽, 미음 위주.</div>
+      <div class="age-tip">해열제가 들으면 아이가 활발해질 수 있음. 이 때 다시 놀게 해도 OK (무리한 활동만 피하기)</div>
+      <div class="age-warn">수족구병: 38~39°C 열 + 입안/손발 물집 발진. 전염성 강함. 어린이집 등원 금지, 격리 필요.</div>
+      <div class="age-warn">독감 시즌: 갑자기 39°C 이상 고열 + 심한 몸살 증상 → 독감 검사 권장. 48시간 이내 항바이러스제 효과 있음.</div>
+    </div>
+  </div>
+
+  <!-- 24개월 이상 -->
+  <div class="age-card" id="age24">
+    <div class="age-header" onclick="toggleAge('age24')">
+      <div class="age-header-left">
+        <div class="age-emoji" style="background:#F3E5F5;">🧒</div>
+        <div>
+          <div class="age-title">24개월 이상</div>
+          <div class="age-sub">면역력 발달 시기</div>
+        </div>
+      </div>
+      <div class="age-arrow">›</div>
+    </div>
+    <div class="age-body">
+      <div class="age-body-title">🌡️ 기준</div>
+      <div class="age-tip">39°C 이상이어도 아이가 잘 놀고 수분 잘 먹으면 당일 응급은 아님. 상태 봐가며 진료 결정.</div>
+      <div class="age-body-title">✅ 대처법</div>
+      <div class="age-ok">아이 스스로 "머리 아파요", "목 아파요" 등 증상 표현 가능. 더 구체적인 진료 가능!</div>
+      <div class="age-tip">해열제 용량은 체중 기준으로 계산. 체중을 미리 알아두면 빠른 투여 가능.</div>
+      <div class="age-tip">열이 떨어진 후에도 2~3일은 쉬는 것이 좋음. 어린이집/유치원 등원은 해열 후 24시간 이상 지나서.</div>
+      <div class="age-warn">5일 이상 발열 → 가와사키병 의심 가능. 눈 충혈, 입술 빨개짐, 손발 부음 등 동반 시 즉시 진료.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 해열제 탭 -->
+<div class="panel" id="panel-med">
+  <div class="section-title">해열제 가이드</div>
+  <p class="section-sub">아기 체중에 맞는 용량으로 투여하고, 종류와 간격을 꼭 지켜주세요.</p>
+
+  <div class="med-card">
+    <div class="med-title">💊 아세트아미노펜 계열 <span class="info-pill">타이레놀 시럽 등</span></div>
+    <div class="med-row">
+      <div class="med-key">사용 가능 월령</div>
+      <div class="med-val">생후 2개월 이상 (의사 지시 하에 그 이전도 가능)</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">용량</div>
+      <div class="med-val">체중 1kg당 10~15mg / 1회</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">투여 간격</div>
+      <div class="med-val">4~6시간 간격, 하루 5회 이내</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">효과 발현</div>
+      <div class="med-val">30~60분 후</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">지속 시간</div>
+      <div class="med-val">4~6시간</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">특징</div>
+      <div class="med-val">가장 기본 해열제. 위장 자극 적음. 신생아도 가능.</div>
+    </div>
+  </div>
+
+  <div class="med-card">
+    <div class="med-title">💊 이부프로펜 계열 <span class="info-pill">부루펜 등</span></div>
+    <div class="med-row">
+      <div class="med-key">사용 가능 월령</div>
+      <div class="med-val"><strong>생후 6개월 이상</strong>부터</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">용량</div>
+      <div class="med-val">체중 1kg당 5~10mg / 1회</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">투여 간격</div>
+      <div class="med-val">6~8시간 간격, 하루 4회 이내</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">효과 발현</div>
+      <div class="med-val">30~60분 후</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">지속 시간</div>
+      <div class="med-val">6~8시간 (더 길게 지속)</div>
+    </div>
+    <div class="med-row">
+      <div class="med-key">특징</div>
+      <div class="med-val">해열·소염 효과 강함. 식사 후 투여 권장. 탈수 상태에서는 주의.</div>
+    </div>
+  </div>
+
+  <div class="danger-card" style="margin-top:4px">
+    <div class="danger-card-title">⚠️ 교차 투여 주의사항</div>
+    <ul class="danger-list">
+      <li>타이레놀 → 부루펜 교차: 각 투여 후 최소 2~3시간 간격</li>
+      <li>같은 계열 중복 투여 절대 금지 (겹치면 과용량)</li>
+      <li>교차 투여 전 반드시 소아과 의사와 상담 권장</li>
+      <li>아스피린은 소아에게 사용 금지 (라이 증후군 위험)</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title" style="font-size:16px">📋 체중별 용량 계산 (아세트아미노펜 기준)</div>
+  <div style="margin-top:12px">
+    <div class="med-card">
+      <div class="med-row"><div class="med-key">5kg (약 2개월)</div><div class="med-val">50~75mg (시럽 2.5~3.75mL)</div></div>
+      <div class="med-row"><div class="med-key">7kg (약 4~6개월)</div><div class="med-val">70~105mg (시럽 3.5~5.25mL)</div></div>
+      <div class="med-row"><div class="med-key">9kg (약 9~12개월)</div><div class="med-val">90~135mg (시럽 4.5~6.75mL)</div></div>
+      <div class="med-row"><div class="med-key">11kg (약 18개월)</div><div class="med-val">110~165mg (시럽 5.5~8.25mL)</div></div>
+      <div class="med-row"><div class="med-key">13kg (약 24개월)</div><div class="med-val">130~195mg (시럽 6.5~9.75mL)</div></div>
+    </div>
+    <div class="age-tip" style="margin-top:8px; font-size:12px">※ 시럽 농도는 제품마다 다를 수 있습니다. 반드시 제품 설명서 및 체중 기준 용량 확인 후 투여하세요.</div>
+  </div>
+</div>
+
+<button class="reset-btn" id="reset-btn" onclick="resetChecks()">체크 초기화</button>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    
+    const tabs = ['check','temp','age','med'];
+    document.querySelectorAll('.tab')[tabs.indexOf(name)].classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+    
+    updateResetBtn();
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.check-item');
+    const done = document.querySelectorAll('.check-item.checked');
+    const pct = (done.length / all.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = done.length + ' / ' + all.length;
+    updateResetBtn();
+  }
+
+  function resetChecks() {
+    document.querySelectorAll('.check-item.checked').forEach(el => el.classList.remove('checked'));
+    updateProgress();
+  }
+
+  function updateResetBtn() {
+    const done = document.querySelectorAll('.check-item.checked').length;
+    const btn = document.getElementById('reset-btn');
+    const panel = document.getElementById('panel-check');
+    if (done > 0 && panel.classList.contains('active')) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }
+
+  function toggleAge(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
